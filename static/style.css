@@ -30,3 +30,13 @@ button {
     color: green;
 }
 
+.message.error {
+    color: red;
+}
+
+.link {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
