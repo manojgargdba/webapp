@@ -35,7 +35,7 @@ def register():
                 with get_db() as db:
                     db.execute('INSERT INTO users (username, password) VALUES (?, ?)',
                                (username, generate_password_hash(password)))
-                return redirect(url_for('login'))
+                return redirect(url_for('login'), 303)
             except sqlite3.IntegrityError:
                 message = 'Username already exists!'
     return render_template('register.html', message=message)
@@ -50,20 +50,20 @@ def login():
             user = db.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
         if user and check_password_hash(user['password'], password):
             session['username'] = username
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('dashboard'), 303)
         message = 'Invalid username or password.'
     return render_template('login.html', message=message)
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('login'))
+    return redirect(url_for('login'), 303)
 
 @app.route('/')
 def dashboard():
     if 'username' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('login'), 303)
     return render_template('dashboard.html', username=session['username'])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
